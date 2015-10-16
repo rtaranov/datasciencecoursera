@@ -19,5 +19,52 @@ sum(dat$Zip*dat$Ext,na.rm=T)
 
 #-----------------------------------------------
 
-doc = xmlInternalTreeParse("getdata_data_restaurants.xml")
-getdata_data_restaurants.xml
+#-------------4th task------------------------
+install.packages("plyr")
+install.packages("XML")
+require("XML")
+doc = xmlTreeParse("getdata_data_restaurants.xml", useInternal=TRUE)
+class(doc)
+rootNode = xmlRoot(doc) #gives content of root
+xmlName(rootNode)
+#names(rootNode[[1]][[1]])
+xmlSApply(rootNode, xmlValue)
+
+zips = xpathSApply(rootNode, "//zipcode", xmlValue)
+
+a <- table(zips)
+a
+a[names(a)==21231]
+
+#-----------------------------------------------
+
+
+#-------------5th task------------------------
+
+DT = fread("getdata_data_ss06pid.csv")
+ptm <- proc.time()
+tapply(DT$pwgtp15,DT$SEX,mean)
+proc.time() - ptm
+
+ptm <- proc.time()
+sapply(split(DT$pwgtp15,DT$SEX),mean)
+proc.time() - ptm
+
+ptm <- proc.time()
+mean(DT[DT$SEX==1,]$pwgtp15); mean(DT[DT$SEX==2,]$pwgtp15)
+proc.time() - ptm
+
+ptm <- proc.time()
+mean(DT$pwgtp15,by=DT$SEX)
+proc.time() - ptm
+
+ptm <- proc.time()
+rowMeans(DT)[DT$SEX==1]; rowMeans(DT)[DT$SEX==2]
+proc.time() - ptm
+
+ptm <- proc.time()
+DT[,mean(pwgtp15),by=SEX]
+proc.time() - ptm
+
+#-----------------------------------------------
+
